@@ -36,14 +36,21 @@
 # Copyright 2016 Your name here, unless otherwise noted.
 #
 class db2_dsdriver (
-  $path = $::db2_dsdriver::params::path,
-  $config = $::db2_dsdriver::params::config,
-
+  $path              = $::db2_dsdriver::params::path,
+  $config            = $::db2_dsdriver::params::config,
+  $config_file_mode  = $::db2_dsdriver::params::config_file_mode,
+  $config_file_owner = $::db2_dsdriver::params::config_file_owner,
+  $config_file_group = $::db2_dsdriver::params::config_file_group,
 ) inherits ::db2_dsdriver::params {
 
 $cfg_file = "${path}/${config}"
 
-concat{$cfg_file: }
+concat{$cfg_file:
+  ensure => present,
+  owner  => $config_file_owner,
+  group  => $config_file_group,
+  mode   => $config_file_mode,
+}
 
 concat::fragment{'header':
     target  => $cfg_file,
